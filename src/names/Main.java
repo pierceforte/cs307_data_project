@@ -25,7 +25,9 @@ public class Main {
     }
     public static void main (String[] args) {
         initializeNameCollector();
-        //nameCollector.getPopularityForRangeOfYears("M", "Pierce", 2000, 2018);
+        //nameCollector.getPopularityForRangeOfYears(NameCollector.MALE, "Pierce", 2000, 2018);
+        //nameCollector.printRanks(NameCollector.MALE, 2018);
+        System.out.println(nameCollector.getMatchingRankInMostRecentYear(NameCollector.MALE, 2000, "Jkk"));
     }
 
     private static String formatNameFile(String [] format, int year) {
