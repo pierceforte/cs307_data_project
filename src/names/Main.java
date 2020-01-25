@@ -2,7 +2,6 @@ package names;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,9 +24,13 @@ public class Main {
     }
     public static void main (String[] args) {
         initializeNameCollector();
-        //nameCollector.getPopularityForRangeOfYears(NameCollector.MALE, "Pierce", 2000, 2018);
-        //nameCollector.printRanks(NameCollector.MALE, 2018);
-        System.out.println(nameCollector.getMatchingRankInMostRecentYear(NameCollector.MALE, 2000, "Jkk"));
+        /**
+         * Basic questions 1-4 can be answered with the following calls (which contain example inputs)
+         */
+        //nameCollector.getRankForAllYears(NameCollector.MALE, "Pierce");
+        //nameCollector.getMatchingRankInMostRecentYear(NameCollector.MALE, 2000, "Pierce");
+        //nameCollector.getMostFrequentTopRankedNameInRangeOfYears(NameCollector.FEMALE, 1945, 1948);
+        //nameCollector.getMostPopularStartingLetterForSexInRangeOfYears(NameCollector.FEMALE, 1890, 2018);
     }
 
     private static String formatNameFile(String [] format, int year) {

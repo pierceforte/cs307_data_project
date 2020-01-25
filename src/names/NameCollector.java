@@ -35,28 +35,85 @@ public class NameCollector {
         return names.get(sex).get(year).get(name);
     }
 
-    public List<Integer> getPopularityForRangeOfYears(String sex, String name, int start, int end) {
+    public List<Integer> getRankForRangeOfYears(String sex, String name, int start, int end) {
         List<Integer> popularityList = new ArrayList<>();
-        System.out.println("Popularity for " + name + ", " + sex + " from " + start + " to " + end + ":");
+        System.out.println("Rank for " + name + ", " + sex + " from " + start + " to " + end + ":");
         for (int year = start; year <= end; year++) {
-            int popularity = getPopularityForYear(sex, year, name);
-            popularityList.add(popularity);
-            System.out.println(year + ": " + popularity);
+            int rank = getRankBySexYearAndName(sex, year, name);
+            popularityList.add(rank);
+            System.out.println(year + ": " + rank);
         }
         return popularityList;
     }
 
-    public List<Integer> getPopularityForAllYears(String sex, String name) {
-        return getPopularityForRangeOfYears(sex, name, minYear, maxYear);
+    public List<Integer> getRankForAllYears(String sex, String name) {
+        return getRankForRangeOfYears(sex, name, minYear, maxYear);
     }
 
     public String getMatchingRankInMostRecentYear(String sex, int year, String name) {
         // subtract 1 to get rank index
         int rankIndex = getRankBySexYearAndName(sex, year, name) - 1;
-        return getNameBySexYearAndRank(sex, maxYear, rankIndex);
+        String match = getNameBySexYearAndRank(sex, maxYear, rankIndex);
+        System.out.println("The name in the most recent year (" + maxYear + ") with same rank (" + (rankIndex+1) +
+                        ") as " + name + ", " + sex + " in " + year + " is:\n" + match);
+        return match;
     }
 
-    public int getRankBySexYearAndName(String sex, int year, String name) {
+    public List<String> getMostFrequentTopRankedNameInRangeOfYears(String sex, int start, int end) {
+        Map<String, Integer> frequencyMap = new HashMap<>();
+        for (int year = start; year <= end; year++) {
+            String topRank = rankedNames.get(sex).get(year).get(0);
+            frequencyMap.putIfAbsent(topRank, 0);
+            frequencyMap.put(topRank, frequencyMap.get(topRank)+1);
+        }
+
+        List<String> mostFrequentTopRanks = new ArrayList<>();
+        List<String> topRanks = new ArrayList<>(frequencyMap.keySet());
+        Collections.sort(topRanks);
+        Collections.reverse(topRanks);
+        int highestFrequency = 0;
+        for (String topRank : topRanks) {
+            if (frequencyMap.get(topRank) >= highestFrequency) {
+                highestFrequency = frequencyMap.get(topRank);
+                mostFrequentTopRanks.add(topRank);
+            }
+            else break;
+        }
+
+        Collections.sort(mostFrequentTopRanks);
+        System.out.println("Between " + start + " and " + end + ", the following name(s) held the top rank for " + highestFrequency + " years.");
+        for (String topRank : mostFrequentTopRanks) System.out.println(topRank);
+        return mostFrequentTopRanks;
+    }
+
+    public Set<String> getMostPopularStartingLetterForSexInRangeOfYears(String sex, int start, int end) {
+        int [] tracker = new int [26];
+        for (int year = start; year <= end; year++) {
+            for (String name : names.get(sex).get(year).keySet()) {
+                tracker[name.toLowerCase().charAt(0)-97] += getPopularityForYear(sex, year, name);
+            }
+        }
+        char mostPopularLetter = '.';
+        int highestCount = -1;
+        for (int i = 0; i < tracker.length; i++) {
+            if (tracker[i] > highestCount) {
+                mostPopularLetter = (char) (97+i);
+                highestCount = tracker[i];
+            }
+        }
+
+        Set<String> namesStartingWithMostPopularLetter = new TreeSet<>(Comparator.comparing((String name) -> name));
+        for (int year = start; year <= end; year++) {
+            for (String name : names.get(sex).get(year).keySet()) {
+                if (name.toLowerCase().charAt(0) == mostPopularLetter) namesStartingWithMostPopularLetter.add(name);
+            }
+        }
+
+        for (String name : namesStartingWithMostPopularLetter) System.out.println(name);
+        return namesStartingWithMostPopularLetter;
+    }
+
+    private int getRankBySexYearAndName(String sex, int year, String name) {
         int rank = rankedNames.get(sex).get(year).indexOf(name);
         if (rank == -1) {
             try {
@@ -71,7 +128,7 @@ public class NameCollector {
         return rank+1;
     }
 
-    public String getNameBySexYearAndRank(String sex, int year, int rank) {
+    private String getNameBySexYearAndRank(String sex, int year, int rank) {
         String name = "";
         try {
             name =  rankedNames.get(sex).get(year).get(rank);
@@ -82,7 +139,7 @@ public class NameCollector {
         return name;
     }
 
-    public void printRanks(String sex, int year) {
+    private void printRanks(String sex, int year) {
         int i = 0;
         for (String name : rankedNames.get(sex).get(year)) {
             i++;
