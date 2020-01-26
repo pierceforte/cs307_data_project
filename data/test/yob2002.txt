@@ -1,0 +1,9 @@
+Richard,M,300
+Anne,F,2000
+Jane,F,1000
+William,M,800
+Hailey,F,500
+Julia,F,1500
+Jessica,F,100
+Amy,F,100
+James,M,50

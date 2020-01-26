@@ -22,6 +22,12 @@ public class Main {
         }
         nameCollector = new NameCollector(yearNameFiles);
     }
+
+    // made public to utilize within JUnit tests
+    public static String formatNameFile(String [] format, int year) {
+        return (format[0] + year + format[1]);
+    }
+
     public static void main (String[] args) {
         initializeNameCollector();
         /**
@@ -31,9 +37,5 @@ public class Main {
         //nameCollector.getMatchingRankInMostRecentYear(NameCollector.MALE, 2000, "Pierce");
         //nameCollector.getMostFrequentTopRankedNameInRangeOfYears(NameCollector.FEMALE, 1945, 1948);
         //nameCollector.getMostPopularStartingLetterForSexInRangeOfYears(NameCollector.FEMALE, 1890, 2018);
-    }
-
-    private static String formatNameFile(String [] format, int year) {
-        return (format[0] + year + format[1]);
     }
 }

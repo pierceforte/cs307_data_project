@@ -43,6 +43,7 @@ public class NameCollector {
             popularityList.add(rank);
             System.out.println(year + ": " + rank);
         }
+        System.out.println("\n");
         return popularityList;
     }
 
@@ -55,7 +56,7 @@ public class NameCollector {
         int rankIndex = getRankBySexYearAndName(sex, year, name) - 1;
         String match = getNameBySexYearAndRank(sex, maxYear, rankIndex);
         System.out.println("The name in the most recent year (" + maxYear + ") with same rank (" + (rankIndex+1) +
-                        ") as " + name + ", " + sex + " in " + year + " is:\n" + match);
+                        ") as " + name + ", " + sex + " in " + year + " is:\n" + match + "\n");
         return match;
     }
 
@@ -69,8 +70,10 @@ public class NameCollector {
 
         List<String> mostFrequentTopRanks = new ArrayList<>();
         List<String> topRanks = new ArrayList<>(frequencyMap.keySet());
-        Collections.sort(topRanks);
-        Collections.reverse(topRanks);
+        Collections.sort(topRanks, Comparator
+                .comparing((String name) -> frequencyMap.get(name))
+                .reversed()
+                .thenComparing((String name) -> name));
         int highestFrequency = 0;
         for (String topRank : topRanks) {
             if (frequencyMap.get(topRank) >= highestFrequency) {
@@ -81,8 +84,9 @@ public class NameCollector {
         }
 
         Collections.sort(mostFrequentTopRanks);
-        System.out.println("Between " + start + " and " + end + ", the following name(s) held the top rank for " + highestFrequency + " years.");
-        for (String topRank : mostFrequentTopRanks) System.out.println(topRank);
+        System.out.println("Between " + start + " and " + end + ", the following name(s) held the top rank for "
+                + highestFrequency + " years.");
+        printAllCollectionElements(mostFrequentTopRanks);
         return mostFrequentTopRanks;
     }
 
@@ -109,7 +113,9 @@ public class NameCollector {
             }
         }
 
-        for (String name : namesStartingWithMostPopularLetter) System.out.println(name);
+        System.out.println("Between " + start + " and " + end + ", the following name(s) of sex " + sex
+                + " had the most popular starting letter.");
+        printAllCollectionElements(namesStartingWithMostPopularLetter);
         return namesStartingWithMostPopularLetter;
     }
 
@@ -119,12 +125,10 @@ public class NameCollector {
             try {
                 throw new Exception();
             } catch (Exception e) {
-                System.out.println("Name \"" + name + "\" with sex " + sex + " not present in data for year " + year + ".");
+                System.out.println("Name \"" + name + "\" with sex " + sex + " not present in data for year " + year + ".\n");
                 e.printStackTrace();
             }
         }
-        //rank = (rank == -1 ? -1 : rank+1);
-        //System.out.println(rank);
         return rank+1;
     }
 
@@ -134,18 +138,11 @@ public class NameCollector {
             name =  rankedNames.get(sex).get(year).get(rank);
         }
         catch (IndexOutOfBoundsException e) {
-            System.out.println("No name for rank " + rank + " in year " + year + " for sex " + sex);
+            System.out.println("No name for rank " + rank + " in year " + year + " for sex " + sex + ".\n");
         }
         return name;
     }
 
-    private void printRanks(String sex, int year) {
-        int i = 0;
-        for (String name : rankedNames.get(sex).get(year)) {
-            i++;
-            System.out.println(i + ": " + name + ",    " + getPopularityForYear(sex, year, name));
-        }
-    }
 
     private void rankNames() {
         for (String sex : names.keySet()) {
@@ -180,6 +177,10 @@ public class NameCollector {
         return Integer.parseInt(slashSplit[slashSplit.length - 1].split("\\.")[0].split("yob")[1]);
     }
 
+    private void printAllCollectionElements(Collection collection) {
+        for (Object obj : collection) System.out.println(obj);
+        System.out.println("\n");
+    }
     private void scanFile(String yearNameFile, int year) {
         try {
             File file = new File(yearNameFile);
