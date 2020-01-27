@@ -32,6 +32,8 @@ class NameCollectorTest {
 
         testBasicQuestion4(nameCollector, NameCollector.FEMALE, 2000, 2001, Set.of("Anne"));
         testBasicQuestion4(nameCollector, NameCollector.FEMALE, 2000, 2002, Set.of("Jane","Jessica","Julia"));
+
+
     }
 
     private void testBasicQuestion1(NameCollector nameCollector, String sex, String name, List<Integer> actualRankForAllYears) {

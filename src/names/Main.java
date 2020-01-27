@@ -38,11 +38,14 @@ public class Main {
         //nameCollector.getMostFrequentTopRankedNameInRangeOfYears(NameCollector.FEMALE, 1945, 1948);
         //nameCollector.getMostPopularStartingLetterForSexInRangeOfYears(NameCollector.FEMALE, 1890, 2018);
         /**
-         * Final questions 1, 2, and 4 can be answered with the following calls (which contain example inputs). Note
-         * that I did not have time to implement JUnit tests.
+         * Final questions 1-4 can be answered with the following calls (which contain example inputs). Note
+         * that I did not have time to implement JUnit tests; however, their results seem accurate from basic
+         * comparisons of the input data files.
          */
         //nameCollector.getRankForRangeOfYears(NameCollector.MALE, "Pierce", 1880, 2018);
-        //nameCollector.getDifferenceInRankBetweenFirstAndLastYearsForNameAndSex(NameCollector.MALE, "Pierce");
-        nameCollector.getAverageRankInRangeOfYears(NameCollector.MALE, "Pierce", 2000, 2018);
+        //nameCollector.getDifferenceInRankBetweenFirstAndLastYearsForNameAndSex(NameCollector.MALE, "Pierce", true);
+        //nameCollector.getNameWithGreatestDifferenceInRankBetweenTwoYears(1880, 2018);
+        //nameCollector.getAverageRankInRangeOfYears(NameCollector.MALE, "Pierce", 2000, 2018);
+
     }
 }

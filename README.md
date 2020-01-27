@@ -20,7 +20,7 @@ The main resources I used were Piazza as well as the given tutorials/readings (t
 ### Running the Program
 
 Main class:   
-The main class can be used to create a NameCollector object, using the "yob1880.txt" through "yob2018.txt" files in "data/ssa_complete/". From here, this object can be used to gather information listed in the basic requirements, using the methods "expectedRankForAllYears", "getMatchingRankInMostRecentYear", "getMostFrequentTopRankedNameInRangeOfYears", and "getMostPopularStartingLetterForSexInRangeOfYears". 
+The main class can be used to create a NameCollector object, using the "yob1880.txt" through "yob2018.txt" files in "data/ssa_complete/". From here, this object can be used to gather information listed in the basic requirements, using the methods "expectedRankForAllYears", "getMatchingRankInMostRecentYear", "getMostFrequentTopRankedNameInRangeOfYears", and "getMostPopularStartingLetterForSexInRangeOfYears". It can also gather information from the first four questions, using the methods "getRankForRangeOfYears", "getDifferenceInRankBetweenFirstAndLastYearsForNameAndSex", "getNameWithGreatestDifferenceInRankBetweenTwoYears", and "getAverageRankInRangeOfYears".
 
 Beyond these requirements, *all* years and names in this data set can be accurately explored, and error handling is in place for when a user-inputed file, name, or matching-rank-request (question 2) is not valid.
 
@@ -36,7 +36,7 @@ Cheat keys:
 Known Bugs:
 
 Extra credit:  
-Given that I joined late, the goal was to complete the basic requirements. My implementation of error handling could be considered "extra".
+Given that I joined late, the goal was to complete the basic requirements. My implementation of "final" questions 1-4 and error handling could be considered "extra".
 
 
 ### Notes/Assumptions

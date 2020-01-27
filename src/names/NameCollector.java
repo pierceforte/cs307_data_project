@@ -121,13 +121,46 @@ public class NameCollector {
     }
 
     public int getDifferenceInRankBetweenTwoYearsForNameAndSex(String sex, String name, int start, int end) {
-        int difference = getRankBySexYearAndName(sex, end, name) - getRankBySexYearAndName(sex, start, name);
-        System.out.println("The difference in rank is: " + difference);
+        return getRankBySexYearAndName(sex, end, name) - getRankBySexYearAndName(sex, start, name);
+    }
+
+    public int getDifferenceInRankBetweenFirstAndLastYearsForNameAndSex(String sex, String name, boolean printDifference) {
+        int difference = getDifferenceInRankBetweenTwoYearsForNameAndSex(sex, name, minYear, maxYear);
+        if (printDifference) System.out.println("The difference in rank is: " + difference);
         return difference;
     }
 
-    public int getDifferenceInRankBetweenFirstAndLastYearsForNameAndSex(String sex, String name) {
-        return getDifferenceInRankBetweenTwoYearsForNameAndSex(sex, name, minYear, maxYear);
+    public int getNameWithGreatestDifferenceInRankBetweenTwoYears(int start, int end) {
+        // key will be in form name,sex (e.g. "Pierce,M")
+        Map<String, Integer> differenceMap = new HashMap<>();
+
+        List<String> startYearNames = new ArrayList<>();
+        for (String sex : List.of(MALE, FEMALE)) {
+            for (String name : names.get(sex).get(start).keySet()) {
+                startYearNames.add(name + "," + sex);
+            }
+        }
+        for (String sex : List.of(MALE, FEMALE)) {
+            for (String name : names.get(sex).get(end).keySet()) {
+                if (startYearNames.contains(name + "," + sex)) {
+                    int difference = getDifferenceInRankBetweenTwoYearsForNameAndSex(sex, name, start, end);
+                    differenceMap.put(name + "," + sex, difference);
+                }
+            }
+        }
+
+        int maxDifference = Integer.MIN_VALUE;
+        for (int difference : differenceMap.values()) {
+            if (Math.abs(difference) > Math.abs(maxDifference)) maxDifference = difference;
+        }
+
+        System.out.println("Greatest difference in rank: " + maxDifference);
+        for (String name : differenceMap.keySet()) {
+            if (differenceMap.get(name) == maxDifference) System.out.println(name);
+        }
+        return maxDifference;
+
+
     }
 
     public int getAverageRankInRangeOfYears(String sex, String name, int start, int end) {
@@ -158,7 +191,7 @@ public class NameCollector {
     }
 
     private String getNameBySexYearAndRank(String sex, int year, int rank) {
-        String name = "";
+        String name = "invalid";
         try {
             name =  rankedNames.get(sex).get(year).get(rank);
         }
