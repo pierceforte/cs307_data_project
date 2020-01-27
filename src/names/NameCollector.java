@@ -140,8 +140,10 @@ public class NameCollector {
                 startYearNames.add(name + "," + sex);
             }
         }
+
         for (String sex : List.of(MALE, FEMALE)) {
             for (String name : names.get(sex).get(end).keySet()) {
+                // check if name has rank in both years to avoid error
                 if (startYearNames.contains(name + "," + sex)) {
                     int difference = getDifferenceInRankBetweenTwoYearsForNameAndSex(sex, name, start, end);
                     differenceMap.put(name + "," + sex, difference);
@@ -154,7 +156,7 @@ public class NameCollector {
             if (Math.abs(difference) > Math.abs(maxDifference)) maxDifference = difference;
         }
 
-        System.out.println("Greatest difference in rank: " + maxDifference);
+        System.out.println("The following name(s) had the greatest difference in rank (" + maxDifference + ")");
         for (String name : differenceMap.keySet()) {
             if (differenceMap.get(name) == maxDifference) System.out.println(name);
         }

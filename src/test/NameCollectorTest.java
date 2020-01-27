@@ -13,6 +13,7 @@ class NameCollectorTest {
     public static int FIRST_YEAR_OF_TEST_DATA = 2000;
     public static int LAST_YEAR_OF_TEST_DATA = 2002;
     public static final String [] TEST_YEAR_NAME_FILE_FORMAT = {"data/test/yob",".txt"};
+
     @Test
     public void name() throws Exception {
         List<String> yearNameFiles = new ArrayList<>();

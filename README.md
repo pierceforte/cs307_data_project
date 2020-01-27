@@ -36,7 +36,7 @@ Cheat keys:
 Known Bugs:
 
 Extra credit:  
-Given that I joined late, the goal was to complete the basic requirements. My implementation of "final" questions 1-4 and error handling could be considered "extra".
+Given that I joined late, the goal was to complete the basic requirements. My implementation of "final" questions 1-4, a main() method that works on the full data set, and error handling could be considered "extra".
 
 
 ### Notes/Assumptions
