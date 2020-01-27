@@ -3,18 +3,20 @@ package test;
 import names.Main;
 import names.NameCollector;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
+// this class represents both the INPUT and OUTPUT stages of IPO
 class NameCollectorTest {
 
+    public static int FIRST_YEAR_OF_TEST_DATA = 2000;
+    public static int LAST_YEAR_OF_TEST_DATA = 2002;
     public static final String [] TEST_YEAR_NAME_FILE_FORMAT = {"data/test/yob",".txt"};
     @Test
     public void name() throws Exception {
         List<String> yearNameFiles = new ArrayList<>();
-        for (int year = 2000; year <= 2002; year++) {
+        for (int year = FIRST_YEAR_OF_TEST_DATA; year <= LAST_YEAR_OF_TEST_DATA; year++) {
             yearNameFiles.add(Main.formatNameFile(TEST_YEAR_NAME_FILE_FORMAT, year));
         }
         NameCollector nameCollector = new NameCollector(yearNameFiles);

@@ -4,10 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+// this class represents the PROCESSING stage of IPO
 public class NameCollector {
 
     public static final String MALE = "M";
     public static final String FEMALE = "F";
+    // ascii code 97 is 'a'; by subtracting this from a char value, we can convert chars to ints in range [0,25],
+    // and by adding this conversion value to an int in the same range, we can convert ints to the characters 'a' to 'z'
+    public static final int CHAR_TO_INT_CONVERSION_VALUE = 97;
 
     // maps from sex to map of year to map of name to popularity
     private HashMap<String, HashMap<Integer, HashMap<String, Integer>>> names = new HashMap<>();
@@ -92,31 +96,52 @@ public class NameCollector {
 
     public Set<String> getMostPopularStartingLetterForSexInRangeOfYears(String sex, int start, int end) {
         int [] tracker = new int [26];
+        Map<Character, Set<String>> mapOfStartingLetterToNames = new HashMap<>();
         for (int year = start; year <= end; year++) {
             for (String name : names.get(sex).get(year).keySet()) {
-                tracker[name.toLowerCase().charAt(0)-97] += getPopularityForYear(sex, year, name);
+                char startingLetter = name.toLowerCase().charAt(0);
+                tracker[startingLetter- CHAR_TO_INT_CONVERSION_VALUE] += getPopularityForYear(sex, year, name);
+                mapOfStartingLetterToNames.putIfAbsent(startingLetter, new TreeSet<>(Comparator.comparing((String nameAdded) -> nameAdded)));
+                mapOfStartingLetterToNames.get(startingLetter).add(name);
             }
         }
         char mostPopularLetter = '.';
         int highestCount = -1;
         for (int i = 0; i < tracker.length; i++) {
             if (tracker[i] > highestCount) {
-                mostPopularLetter = (char) (97+i);
+                mostPopularLetter = (char) (CHAR_TO_INT_CONVERSION_VALUE +i);
                 highestCount = tracker[i];
-            }
-        }
-
-        Set<String> namesStartingWithMostPopularLetter = new TreeSet<>(Comparator.comparing((String name) -> name));
-        for (int year = start; year <= end; year++) {
-            for (String name : names.get(sex).get(year).keySet()) {
-                if (name.toLowerCase().charAt(0) == mostPopularLetter) namesStartingWithMostPopularLetter.add(name);
             }
         }
 
         System.out.println("Between " + start + " and " + end + ", the following name(s) of sex " + sex
                 + " had the most popular starting letter.");
-        printAllCollectionElements(namesStartingWithMostPopularLetter);
-        return namesStartingWithMostPopularLetter;
+        printAllCollectionElements(mapOfStartingLetterToNames.get(mostPopularLetter));
+        return mapOfStartingLetterToNames.get(mostPopularLetter);
+    }
+
+    public int getDifferenceInRankBetweenTwoYearsForNameAndSex(String sex, String name, int start, int end) {
+        int difference = getRankBySexYearAndName(sex, end, name) - getRankBySexYearAndName(sex, start, name);
+        System.out.println("The difference in rank is: " + difference);
+        return difference;
+    }
+
+    public int getDifferenceInRankBetweenFirstAndLastYearsForNameAndSex(String sex, String name) {
+        return getDifferenceInRankBetweenTwoYearsForNameAndSex(sex, name, minYear, maxYear);
+    }
+
+    public int getAverageRankInRangeOfYears(String sex, String name, int start, int end) {
+        // we add 1 since the range is inclusive (so if it is 2000 to 2000, we have 1 year, not 0)
+        int numberOfRanks = end - start + 1;
+        int totalRanks = 0;
+        for (int year = start; year <= end; year++) {
+            totalRanks += getRankBySexYearAndName(sex, year, name);
+        }
+        // rounded down (e.g. 1.8 is rank 1, not 2)
+        int averageRank = totalRanks/numberOfRanks;
+        System.out.println("Average rank:" + averageRank);
+        return averageRank;
+
     }
 
     private int getRankBySexYearAndName(String sex, int year, String name) {
@@ -181,6 +206,7 @@ public class NameCollector {
         for (Object obj : collection) System.out.println(obj);
         System.out.println("\n");
     }
+
     private void scanFile(String yearNameFile, int year) {
         try {
             File file = new File(yearNameFile);
