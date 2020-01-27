@@ -40,6 +40,8 @@ Given that I joined late, the goal was to complete the basic requirements. My im
 
 
 ### Notes/Assumptions
+Note that after speaking with Dr. Duvall, it was only expected that I show "good faith" and complete the basic requirements given that I joined this class late. I hope that my work is sufficient and that my attempts to go beyond the basic requirements were successful.
+
 The initalizeNameCollector() and formatFileName() classes assume that the name files are given in the format "yob****.txt", where **** is the year. It is also assumed that the actual files are contained in the data/ssa_complete/ directory, and that the test files are contained in the data/test/ directory.
 
 It is assumed that for question 4, the overall popularity of a starting letter is determined based on how many babies were given a name with this starting letter (regardless of the name), *NOT* the number of *different* names with this starting letter. For example, for the range 2000 to 2001, if the name Anne was given 500 times in 2000, and Jane and Jessica were each given 10 times in each of the aforementioned years, the starting letter "A" would be considered most popular: the total for "A" is 500, and the total for "J" is 40.
