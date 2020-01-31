@@ -1,3 +1,16 @@
+/*
+ * The purpose of this class is to process the inputted baby name data and offer methods for analyzing
+ * the data and providing useful information about it (requested by the assignment questions).
+ * I spent a lot of time considering the design of this code and have had a hard time finding places for
+ * improvement. I believe it is well designed because I made a great effort to eliminate any duplication
+ * contained within it. Likewise, I believe it is readable due to its use of clear variable names, no magic
+ * values, and simple, single-purpose methods; I have also made some changes to improve this readability.
+ * Finally, it is easy to implement features due to the inclusion of simple methods that can be used as
+ * "pieces" for more complex features. While I have had trouble determining what to improve, I know that my
+ * code is certainly not perfect and would value feedback to help me as I move forward!
+ */
+
+
 package names;
 
 import java.io.File;
@@ -18,9 +31,8 @@ public class NameCollector {
     // maps from sex to map of year to list of names ordered by rank
     private HashMap<String, HashMap<Integer, List<String>>> rankedNames = new HashMap<>();
 
-    private int maxYear = Integer.MIN_VALUE;
-    private int minYear = Integer.MAX_VALUE;
-
+    private int mostRecentYear = Integer.MIN_VALUE;
+    private int earliestYear = Integer.MAX_VALUE;
 
     public NameCollector(List<String> yearNameFiles) {
         putSexKeysIntoMap(names);
@@ -28,8 +40,8 @@ public class NameCollector {
         for (String yearNameFile : yearNameFiles) {
             int year = extractYear(yearNameFile);
             initializeNameMap(year);
-            if (year > maxYear) maxYear = year;
-            if (year < minYear) minYear = year;
+            if (year > mostRecentYear) mostRecentYear = year;
+            if (year < earliestYear) earliestYear = year;
             scanFile(yearNameFile, year);
         }
         rankNames();
@@ -52,14 +64,14 @@ public class NameCollector {
     }
 
     public List<Integer> getRankForAllYears(String sex, String name) {
-        return getRankForRangeOfYears(sex, name, minYear, maxYear);
+        return getRankForRangeOfYears(sex, name, earliestYear, mostRecentYear);
     }
 
     public String getMatchingRankInMostRecentYear(String sex, int year, String name) {
         // subtract 1 to get rank index
         int rankIndex = getRankBySexYearAndName(sex, year, name) - 1;
-        String match = getNameBySexYearAndRank(sex, maxYear, rankIndex);
-        System.out.println("The name in the most recent year (" + maxYear + ") with same rank (" + (rankIndex+1) +
+        String match = getNameBySexYearAndRank(sex, mostRecentYear, rankIndex);
+        System.out.println("The name in the most recent year (" + mostRecentYear + ") with same rank (" + (rankIndex+1) +
                         ") as " + name + ", " + sex + " in " + year + " is:\n" + match + "\n");
         return match;
     }
@@ -125,7 +137,7 @@ public class NameCollector {
     }
 
     public int getDifferenceInRankBetweenFirstAndLastYearsForNameAndSex(String sex, String name, boolean printDifference) {
-        int difference = getDifferenceInRankBetweenTwoYearsForNameAndSex(sex, name, minYear, maxYear);
+        int difference = getDifferenceInRankBetweenTwoYearsForNameAndSex(sex, name, earliestYear, mostRecentYear);
         if (printDifference) System.out.println("The difference in rank is: " + difference);
         return difference;
     }
@@ -161,8 +173,6 @@ public class NameCollector {
             if (differenceMap.get(name) == maxDifference) System.out.println(name);
         }
         return maxDifference;
-
-
     }
 
     public int getAverageRankInRangeOfYears(String sex, String name, int start, int end) {
@@ -180,7 +190,8 @@ public class NameCollector {
     }
 
     private int getRankBySexYearAndName(String sex, int year, String name) {
-        int rank = rankedNames.get(sex).get(year).indexOf(name);
+        List<String> ranksBySexAndYear = rankedNames.get(sex).get(year);
+        int rank = ranksBySexAndYear.indexOf(name);
         if (rank == -1) {
             try {
                 throw new Exception();
@@ -203,20 +214,21 @@ public class NameCollector {
         return name;
     }
 
-
     private void rankNames() {
         for (String sex : names.keySet()) {
             for (int year : names.get(sex).keySet()) {
                 // rank the names first by popularity and then, in the case of ties, alphabetically
-                List<String> ranks = new ArrayList<>();
-                for (String name : names.get(sex).get(year).keySet()) {
-                    ranks.add(name);
+                List<String> ranksBySexAndYear = new ArrayList<>();
+                HashMap<String, Integer> namesToPopularityMap = names.get(sex).get(year);
+                Set<String> names = namesToPopularityMap.keySet();
+                for (String name : names) {
+                    ranksBySexAndYear.add(name);
                 }
-                Collections.sort(ranks,Comparator
+                Collections.sort(ranksBySexAndYear,Comparator
                         .comparing((String name) -> getPopularityForYear(sex, year, name))
                         .reversed()
                         .thenComparing((name) -> name));
-                rankedNames.get(sex).put(year, ranks);
+                rankedNames.get(sex).put(year, ranksBySexAndYear);
             }
         }
     }
