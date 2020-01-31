@@ -1,11 +1,3 @@
-names of all people who worked on the project
-each person's role in developing the project
-what are the project's design goals, specifically what kinds of new features did you want to make easy to add
-describe the high-level design of your project, focusing on the purpose and interaction of the core classes
-what assumptions or decisions were made to simplify your project's design, especially those that affected adding required features
-describe, in detail, how to add new features to your project, especially ones you were not able to complete by the deadline
-
-
 ### Name  
 Pierce Forte (phf7)
 
@@ -30,4 +22,35 @@ Further, an early decision I made was to create a single two-level hashmap (need
 
 
 ### How to Add New Features  
-Since I did not do Complete requirements 5-10, I will explain how to add them here. 
+Since I did not do Complete requirements 5-10, I will explain how to add them here.  
+
+5) Given a name and a range of years, what is its average rank during that time (regardless of gender)?  
+This feature would be implemented with two functions. The first (rankNamesRegardlessOfGender) would go through the already-determined ranks (which are by gender) and for each year and each gender, it would add the ranked names to a sorted list for that year. The resulting lists would be placed into a global hashmap (called rankedNamesRegardlessOfGender), which would map from year to a sorted list of the ranked names for that year. This function would likely be called within the constructor for the NameCollector class so that these ranks could be accessed easily for other features. Next, the second method, which would be specific to this question, would contain an ArrayList to store the rank of a given name from each year. There would be a for loop to repeatedly determine the rank of the name for each year using the first method described above, the rank would be added to the list, and then the function would return the average of this list.  
+  
+6) Given a name and a number of years, what is its average rank for the most recent number of years (regardless of gender)?  
+Utilizing the "maxYear" global variable in the NameCollector class, which stores the most recent year, this function would call the second function described in question 5, which would accept a range of years. The end year would be the most recent year, and the start year would simply be this number minus the given number of years. Further, there would be an if statement to check whether the calculated start year is less than the first year of data available (stored in "minYear"); if this were the case, an exception would be thrown.  
+
+7) Given a range of years, a gender, and a rank, what name/gender pairs held that rank at the first to the last years of the range?  
+Since a method (getMatchingRankInMostRecentYear) is already in place to find a matching name/gender pair in the most recent year, I would create a function called something like getMatchingRank to find the matching pair from *any* year. The getMatchingRankInMostRecentYear function would then simply call this new method and provide the most recent year as a parameter that indicates which year the matching pair will come from. Next, to implement the feature in this question, I would simply have a method that calls the getMatchingRank method for the first and last years of the provided range, and it would return the corresponding names in an ArrayList.
+
+8) Given a range of years and a rank, what name(s) held that rank most often within the range (regardless of gender) and how many years did they have at that rank?
+I would first implement a method called getRankRegardlessOfGender that returns the rank of a name for a given year regardless of gender. This would implement the same functionality as the getRankBySexYearAndName function (the duplicate code would be refactored into its own method) and return a name's rank for that year based on its index in the sorted rank ArrayList. Next, the method for this question would create a local hashmap, mapping from name to the number of years at a given rank. A for loop would loop through the given range of years and add names with the given rank to the hashmap and update its number of occurences at that rank. Finally, the max number of occurences would be determined, and the method would return a list of the names with that number of occurences.
+
+9) Given a range of years, what name(s) were ranked as the year’s most popular name most often (regardless of gender) and how many years did they have the top rank? Answer this question by also including their meaning (using this additional data file).
+To first address this question, I would create a global hashmap that maps from name to meaning, and I would add each name and its meaning to the hashmap while iterating through the additional data file. This function would called within the NameCollector constructor so that the names' meanings could be accessed for future features. Next, I would simply call the getMostFrequentTopRankedNameInRangeOfYears method used to answer Basic question 3, which returns the names with the most top ranks in the given range of years, and I would return these names mapped to their meanings.
+
+10) Extra credit: Given a range of years and a gender, what is the most popular name prefix? Answer this question with an alphabetized list of all names with that prefix.  
+This question seems particularly challenging. To solve it, I would create a set of all possible prefixes (in other words, all substrings from index 0 to [1, length of name) of each of the names in the entire dataset). Then, for each name, I would check if each of these prefixes is at the start of the name, and if it is, I would add the prefix to a hasmap (from prefix to number of occurences) and update its number of occurences. To check if a name is a prefix, I would first check if the prefix is shorter than or equal to the name's length, and if so, I would check whether the substring of the name from index 0 to the length of the prefix - 1 is equal to the prefix.
+
+#### Other Features
+Further, since I did not read from a URL or handle all errors (I have already handled invalid files), I will discuss how to do that here.
+
+#### URL
+To read from an URL, I would follow the instructions here https://docs.oracle.com/javase/tutorial/networking/urls/readingURL.html, implementing an InputStream to read through the contents of the URL, go through the given directories, and add data to a NameCollector instance.  
+
+#### Errors
+To handle a non "M" or "F" gender, I would check whether the provided gender is equal to "M" or "F", and if not, I would throw an error, not add this name to the names stored in NameCollector, and continue through the rest of the names.  
+
+I assume that "names that do not match the exact case of those in the various data files" would mean names with unusual uppercase or lowercase letters. Since my code does not rely on a name's case, this would not cause any errors and would not require any handling. That said, I feel like I may have misenterpreted this requirement, but I hope not.  
+
+For invalid year ranges, I would simply have a method that determines whether a year is valid. Within each method that looks into the name data structures for a given year, I would call this method and throw an error if the given year was invalid. 
